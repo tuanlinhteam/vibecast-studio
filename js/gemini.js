@@ -91,9 +91,11 @@ YÊU CẦU NỘI DUNG VÀ QUY TẮC BẮT BUỘC:
 1. NÓI KHÔNG VỚI CÂU HỎI SÁO RỖNG KIỂU "Có bao giờ bạn tự hỏi...", "Hôm nay chúng ta sẽ nói về...".
 2. CẢNH 1 LÀ HOOK TRỰC DIỆN ĐẮT GIÁ: Đi thẳng vào câu chuyện/insight giật mình để giữ chân người xem ở lại ngay 1-2 giây đầu.
 3. Chia đúng 6 cảnh, tổng thời lượng 42-48s (mỗi cảnh 7-8 giây). Lời thoại là tiếng Việt đời thường sâu sắc, mang phong thái chuyên gia sắc bén nhưng truyền cảm.
-4. VỚI TỪNG CẢNH, VIẾT PROMPT VEO 3 BẰNG TIẾNG ANH CHUẨN: 
-   - Đầu prompt bắt đầu bằng: "VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Close-up medium shot looking directly into camera lens. ${contextObj.promptSnippet || ''}..."
-   - Cuối prompt kết thúc bằng: "ABSOLUTELY NO TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK."
+4. QUY TẮC KHÓA TUYỆT ĐỐI PROMPT VEO 3:
+   - KHÓA TUYỆT ĐỐI CHỮ TIẾNG VIỆT, TRANG PHỤC, NHÂN VẬT VÀ HÌNH ẢNH MẪU CỦA VIDEO GỐC: Không sai chữ, không đổi quần áo, không tự tái tạo hoặc sửa hình ảnh tham chiếu và dùng ảnh tham chiếu đó trực tiếp làm Start Frame / Ingredient.
+   - Kiểm tra đầu ra và loại clip ngay khi sai!
+   - Đầu prompt bắt đầu bằng: "VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Static tripod close-up medium shot looking directly into camera lens. Lock reference image directly as start frame / ingredient. STRICTLY LOCK CHARACTER FACE, OUTFIT, CLOTHING AND BACKGROUND CONTUINUITY. ${contextObj.promptSnippet || ''}..."
+   - Cuối prompt kết thúc bằng: "ABSOLUTELY NO VIETNAMESE TEXT, NO ON-SCREEN TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK. REJECT CLIP IMMEDIATELY IF CHARACTER OUTFIT OR FACE CHANGES OR ON-SCREEN TEXT APPEARS."
    - TUYỆT ĐỐI KHÔNG NÊU MÔ TẢ TÊN, TUỔI HOẶC NGOẠI HÌNH NHÂN VẬT CỤ THỂ TRONG PROMPT VEO 3.
 
 Yêu cầu trả về duy nhất một cấu trúc JSON như sau:
@@ -106,7 +108,7 @@ Yêu cầu trả về duy nhất một cấu trúc JSON như sau:
       "expression": "Thần thái chuyên gia sắc bén, ánh mắt tự tin...",
       "startPose": "Tư thế bắt đầu cảnh 1...",
       "endPose": "Tư thế kết thúc cảnh 1...",
-      "veoPrompt": "VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Close-up medium shot looking directly into camera lens... ABSOLUTELY NO TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK."
+      "veoPrompt": "VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Static tripod close-up medium shot... Lock reference image directly as start frame / ingredient. STRICTLY LOCK CHARACTER FACE, OUTFIT, CLOTHING AND BACKGROUND CONTINUITY... ABSOLUTELY NO VIETNAMESE TEXT, NO ON-SCREEN TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK. REJECT CLIP IMMEDIATELY IF CHARACTER OUTFIT OR FACE CHANGES OR ON-SCREEN TEXT APPEARS."
     },
     ... (đủ 6 cảnh)
   ]
