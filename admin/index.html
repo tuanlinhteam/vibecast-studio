@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trang Quản Trị Admin | VibeCast Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <!-- Fullscreen Auth Overlay -->
+  <div id="authOverlay" class="auth-overlay" style="display: flex;">
+    
+    <!-- 1. USER LOGIN BOX -->
+    <div id="userLoginBox" class="auth-card" style="display: none;">
+      <div class="auth-icon-badge">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+        </svg>
+      </div>
+
+      <h2 class="auth-title">VibeCast Studio</h2>
+      <p class="auth-subtitle">Đăng nhập tài khoản hệ thống để bắt đầu phân tích & Tạo Kịch Bản</p>
+
+      <!-- Auth Tab Switcher -->
+      <div class="auth-tabs">
+        <button type="button" id="tabBtnLogin" class="auth-tab active">🔑 Đăng Nhập</button>
+        <button type="button" id="tabBtnRegister" class="auth-tab">📝 Đăng Ký Tài Khoản</button>
+      </div>
+
+      <!-- 1. Login Form -->
+      <form id="formUserLogin" class="auth-form" onsubmit="return false;">
+        <div class="auth-field">
+          <label>Tên Tài Khoản</label>
+          <div class="auth-input-wrapper">
+            <span class="input-icon">👤</span>
+            <input type="text" id="loginUsername" placeholder="Nhập tên tài khoản..." required autocomplete="username">
+          </div>
+        </div>
+
+        <div class="auth-field">
+          <label>Mật Khẩu</label>
+          <div class="auth-input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="loginPassword" placeholder="Nhập mật khẩu..." required autocomplete="current-password">
+          </div>
+        </div>
+
+        <div id="userLoginError" class="auth-error" style="display: none;"></div>
+
+        <button type="submit" id="btnLoginUserSubmit" class="btn-auth-primary">
+          🛡️ Đăng Nhập Hệ Thống
+        </button>
+
+        <div class="auth-footer-link">
+          <a href="#" id="linkToAdminLogin">🔑 Đăng nhập dành cho Admin</a>
+        </div>
+      </form>
+
+      <!-- 2. Register Form -->
+      <form id="formUserRegister" class="auth-form" style="display: none;" onsubmit="return false;">
+        <div class="auth-field">
+          <label>Tên Tài Khoản Đăng Ký</label>
+          <div class="auth-input-wrapper">
+            <span class="input-icon">👤</span>
+            <input type="text" id="regUsername" placeholder="Tên tài khoản mới..." required autocomplete="username">
+          </div>
+        </div>
+
+        <div class="auth-field">
+          <label>Mật Khẩu</label>
+          <div class="auth-input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="regPassword" placeholder="Mật khẩu..." required autocomplete="new-password">
+          </div>
+        </div>
+
+        <div class="auth-field">
+          <label>Nhập Lại Mật Khẩu</label>
+          <div class="auth-input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="regConfirmPassword" placeholder="Xác nhận lại mật khẩu..." required autocomplete="new-password">
+          </div>
+        </div>
+
+        <div id="userRegError" class="auth-error" style="display: none;"></div>
+        <div id="userRegSuccess" class="auth-success-box" style="display: none;">
+          <div class="success-icon">🎉</div>
+          <h4>Đăng ký thành công!</h4>
+          <p>Vui lòng liên hệ admin để kích hoạt tài khoản.</p>
+        </div>
+
+        <button type="submit" id="btnRegisterUserSubmit" class="btn-auth-primary" style="background: linear-gradient(135deg, #10b981, #059669);">
+          ✨ Đăng Ký Tài Khoản
+        </button>
+      </form>
+
+      <!-- Active Session Notice & Logout Button -->
+      <div id="userLoginSessionBar" style="display: none; width: 100%; text-align: center; margin-top: 16px; padding-top: 14px; border-top: 1px solid #232b3e;">
+        <span style="color:#a78bfa; font-size:0.88rem; margin-right:12px;">Đang đăng nhập: <strong id="userLoginSessionName">User</strong></span>
+        <button type="button" id="btnLogoutUserCard" class="btn btn-secondary btn-sm" style="padding: 4px 12px; font-size: 0.82rem;">🚪 Đăng xuất</button>
+      </div>
+    </div>
+
+    <!-- 2. ADMIN LOGIN BOX -->
+    <div id="adminLoginBox" class="auth-card">
+      <div class="auth-icon-badge admin-badge">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <path d="m9 12 2 2 4-4"/>
+        </svg>
+      </div>
+
+      <h2 class="auth-title">Trang Quản Trị Admin</h2>
+      <p class="auth-subtitle">Vui lòng nhập mật khẩu Admin để truy cập hệ thống quản lý tài khoản</p>
+
+      <form id="formAdminLogin" class="auth-form" onsubmit="return false;">
+        <div class="auth-field">
+          <label>Mật Khẩu Admin</label>
+          <div class="auth-input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="adminPassword" placeholder="Mật khẩu Admin..." required autocomplete="current-password">
+          </div>
+        </div>
+
+        <div id="adminLoginError" class="auth-error" style="display: none;"></div>
+
+        <button type="submit" id="btnLoginAdminSubmit" class="btn-auth-primary btn-auth-admin">
+          🔑 Đăng Nhập Admin
+        </button>
+
+        <div class="auth-footer-link">
+          <a href="#" id="linkToUserLogin">← Quay lại trang Đăng Nhập User</a>
+        </div>
+      </form>
+
+      <!-- Active Session Notice & Logout Button -->
+      <div id="adminLoginSessionBar" style="display: none; width: 100%; text-align: center; margin-top: 16px; padding-top: 14px; border-top: 1px solid #232b3e;">
+        <span style="color:#60a5fa; font-size:0.88rem; margin-right:12px;">Đang đăng nhập: <strong>Ban Quản Trị Admin</strong></span>
+        <button type="button" id="btnLogoutAdminCard" class="btn btn-danger btn-sm" style="padding: 4px 12px; font-size: 0.82rem;">🚪 Đăng xuất Admin</button>
+      </div>
+    </div>
+
+    <!-- 3. ADMIN DASHBOARD BOX -->
+    <div id="adminDashboardBox" class="admin-dashboard-container" style="display: none;">
+      <div class="admin-topbar">
+        <div class="admin-topbar-brand">
+          <div class="admin-shield-icon">🛡️</div>
+          <div>
+            <h3>Bảng Quản Trị Admin</h3>
+            <p>Quản lý tài khoản người dùng & hạn sử dụng hệ thống</p>
+          </div>
+        </div>
+        <div class="admin-topbar-actions">
+          <button type="button" id="btnEnterStudio" class="btn btn-secondary btn-sm">💻 Vào Trang Studio</button>
+          <button type="button" id="btnLogoutAdmin" class="btn btn-danger btn-sm">🚪 Đăng xuất Admin</button>
+        </div>
+      </div>
+
+      <div class="admin-grid">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h4>➕ Tạo Tài Khoản Mới</h4>
+          </div>
+          
+          <form id="formCreateUser" onsubmit="return false;">
+            <div class="auth-field">
+              <label>Tên Tài Khoản (Username)</label>
+              <input type="text" id="newUsername" class="admin-input" placeholder="Nhập tên tài khoản..." required>
+            </div>
+
+            <div class="auth-field">
+              <label>Mật Khẩu</label>
+              <input type="text" id="newPassword" class="admin-input" placeholder="Nhập mật khẩu..." required>
+            </div>
+
+            <div class="auth-field">
+              <label>Thời Hạn Sử Dụng (Số ngày)</label>
+              <input type="number" id="newExpireDays" class="admin-input" value="30" min="1" placeholder="30">
+              
+              <div class="preset-days-row">
+                <button type="button" class="btn-day-pill" data-days="7">7 ngày</button>
+                <button type="button" class="btn-day-pill active" data-days="30">30 ngày</button>
+                <button type="button" class="btn-day-pill" data-days="90">90 ngày</button>
+                <button type="button" class="btn-day-pill" data-days="365">365 ngày</button>
+                <button type="button" class="btn-day-pill" data-days="0">Vĩnh viễn</button>
+              </div>
+            </div>
+
+            <div class="checkbox-field">
+              <input type="checkbox" id="newIsActive" checked>
+              <label for="newIsActive">Kích hoạt tài khoản ngay sau khi tạo</label>
+            </div>
+
+            <div id="createAccMsg" class="auth-msg" style="display: none;"></div>
+
+            <button type="submit" id="btnCreateAccount" class="btn-auth-primary" style="margin-top: 16px;">
+              ✨ Tạo Tài Khoản
+            </button>
+          </form>
+        </div>
+
+        <!-- Right Panel: User Accounts List -->
+        <div class="admin-card">
+          <div class="admin-card-header flex-between" style="flex-wrap: wrap; gap: 10px;">
+            <h4>👥 Danh Sách Người Dùng <span id="userCountBadge" class="count-pill">(0)</span></h4>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button type="button" id="btnActivatePendingUsers" class="btn btn-secondary btn-sm" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; font-weight: 600;">⚡ Kích hoạt tài khoản chờ (7 ngày)</button>
+              <button type="button" id="btnRefreshUsers" class="btn btn-secondary btn-sm">🔄 Làm mới</button>
+            </div>
+          </div>
+
+          <div class="admin-search-bar" style="margin-bottom: 14px;">
+            <input type="text" id="searchUserBox" class="admin-input" placeholder="🔍 Tìm kiếm tên tài khoản..." style="width: 100%; border-radius: 8px; padding: 8px 14px;">
+          </div>
+
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Tên tài khoản</th>
+                  <th>Mật khẩu</th>
+                  <th>Trạng thái</th>
+                  <th>Hạn sử dụng</th>
+                  <th>Đăng nhập lần cuối</th>
+                  <th>Ngày tạo</th>
+                  <th style="text-align: right;">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="userTableBody">
+                <!-- User rows injected by JS -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination Controls Bar -->
+          <div id="paginationControls" class="pagination-bar flex-between" style="margin-top: 16px; flex-wrap: wrap; gap: 10px;"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Main App Layout -->
+  <div class="container">
+    <header class="navbar">
+      <div class="brand">
+        <div class="brand-icon">V</div>
+        <div class="brand-title">
+          <h1>VibeCast Studio</h1>
+          <p>Tạo Video Quan Điểm 9:16 Liền Mạch</p>
+        </div>
+      </div>
+      
+      <div class="navbar-right">
+        <div id="userSessionInfo" class="user-session-info" style="display: none;">
+          <span class="user-name-tag">👤 <strong id="sessionUsername">User</strong></span>
+          <span id="sessionStatusBadge" class="session-badge">🟢 Còn 30 ngày</span>
+          <button type="button" id="btnLogoutUser" class="btn btn-secondary btn-sm" style="padding: 4px 10px; font-size: 0.8rem;">🚪 Đăng xuất</button>
+        </div>
+        <button type="button" id="btnNavAdmin" class="btn btn-secondary btn-sm" style="margin-left: 8px;">🛡️ Admin</button>
+        <div class="badge" style="margin-left: 8px;">✨ Skill Veo 3 v4.0 Active</div>
+      </div>
+    </header>
+
+    <main class="grid-layout">
+      <aside class="panel">
+        <div class="panel-header">
+          <h2>🎛️ Bảng Điều Khiển</h2>
+          <p>Tùy chỉnh chủ đề & bối cảnh</p>
+        </div>
+
+        <div class="api-key-box">
+          <div class="api-key-header">
+            <span class="api-title">🔑 Cấu Hình Gemini AI Key</span>
+            <span id="apiKeyBadge" class="key-status unconfigured">🔴 Chưa lưu</span>
+          </div>
+
+          <div class="form-group" style="margin-top: 8px;">
+            <div class="input-with-icon">
+              <input type="password" id="geminiApiKey" placeholder="AIzaSy... (Khóa Gemini API)">
+              <button id="btnToggleKeyVis" class="btn-icon" title="Ẩn/Hiện Key">👁️</button>
+            </div>
+            <p class="field-hint">Key lưu trong LocalStorage cá nhân, không gửi về server.</p>
+          </div>
+
+          <div class="form-group" style="margin-top: 10px;">
+            <label class="form-label" style="font-size: 0.85rem;">Model Gemini AI</label>
+            <select id="geminiModelSelect" class="form-select">
+              <option value="gemini-3.6-flash">Gemini 3.6 Flash (Nhanh & Tối Ưu)</option>
+              <option value="gemini-3.7-flash">Gemini 3.7 Flash (Mới Nhất - Thông Minh)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="label-row" style="display: flex; justify-content: space-between; align-items: center;">
+            <label for="topicInput" class="form-label">Chủ Đề Trình Bày</label>
+            <button id="btnAiSuggest" class="btn-ai-suggest" title="Dùng Gemini gợi ý 5 chủ đề chuyên gia độc đáo">
+              ✨ Gợi Ý Chủ Đề Bằng AI (Gemini)
+            </button>
+          </div>
+          <textarea id="topicInput" rows="3" placeholder="Nhập chủ đề chia sẻ (VD: Phụ nữ tự chủ tài chính trong hôn nhân hiện đại...)">Phụ nữ tự chủ tài chính trong hôn nhân hiện đại</textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Gợi Ý Chủ Đề Hot (Chuyên Gia & Storytelling)</label>
+          <div class="preset-pills" id="presetsContainer">
+            <button class="preset-pill" data-topic="Phụ nữ tự chủ tài chính trong hôn nhân hiện đại">💡 Tự chủ tài chính trong hôn nhân</button>
+            <button class="preset-pill" data-topic="Khủng hoảng tâm lý & Áp lực sự nghiệp tuổi 30">💡 Áp lực khủng hoảng tuổi 30</button>
+            <button class="preset-pill" data-topic="Bản lĩnh đặt ranh giới cá nhân trong tình yêu">💡 Ranh giới cá nhân trong tình yêu</button>
+            <button class="preset-pill" data-topic="Học cách chữa lành và bao dung với tổn thương quá khứ">💡 Chữa lành & Bao dung bản thân</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Bối Cảnh Khóa Continuity</label>
+          <div class="context-grid">
+            <label class="context-card active">
+              <input type="radio" name="context" value="coffee" checked>
+              <span class="context-icon">☕</span>
+              <div class="context-info">
+                <h4>Quán Cà Phê Ấm Áp</h4>
+                <p>Góc minimal dịu nhẹ, độ sâu hậu cảnh</p>
+              </div>
+            </label>
+
+            <label class="context-card">
+              <input type="radio" name="context" value="podcast">
+              <span class="context-icon">🎙️</span>
+              <div class="context-info">
+                <h4>Phòng Studio Podcast</h4>
+                <p>Hiện đại, tường thu âm trầm ấm</p>
+              </div>
+            </label>
+
+            <label class="context-card">
+              <input type="radio" name="context" value="car">
+              <span class="context-icon">🚗</span>
+              <div class="context-info">
+                <h4>Trong Xe Ô Tô Đỗ</h4>
+                <p>Nội thất sang trọng, góc vlog chân thật</p>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <button id="btnGenerate" class="btn btn-primary">
+          🚀 Tạo Kịch Bản & 6 Prompt Veo 3
+        </button>
+      </aside>
+
+      <section class="canvas">
+        <article class="speech-card">
+          <div class="speech-header">
+            <h3>🗣️ LỜI THOẠI ONE-SHOT HOÀN CHỈNH (42–48 GIÂY)</h3>
+            <div class="actions">
+              <button id="btnCopySpeech" class="btn btn-secondary btn-sm">📋 Copy Toàn Bộ Lời Thoại</button>
+              <button id="btnExportTxt" class="btn btn-secondary btn-sm">💾 Xuất File TXT</button>
+            </div>
+          </div>
+          <div id="speechOutput" class="speech-text">Đang tạo lời thoại...</div>
+        </article>
+
+        <article class="speech-card" style="border-color: rgba(229, 169, 60, 0.4);">
+          <div class="speech-header">
+            <h3 style="color: var(--accent-gold);">🖼️ PROMPT TẠO ẢNH BỐI CẢNH KHÓA CONTINUITY (9:16)</h3>
+            <div class="actions">
+              <button id="btnCopyRefPrompt" class="btn btn-secondary btn-sm">📋 Copy Prompt Tạo Ảnh Bối Cảnh</button>
+            </div>
+          </div>
+          <div class="prompt-box" style="margin-top: 0;">
+            <div id="refPromptOutput" class="prompt-content" style="color: #fef08a;">Đang tạo prompt ảnh bối cảnh...</div>
+          </div>
+        </article>
+
+        <div class="scenes-header">
+          <h3>🎬 PHÂN CẢNH 6 CLIP VEO 3 (TỰ ĐỘNG KHÓA CONTINUITY)</h3>
+          <button id="btnCopyAllPrompts" class="btn btn-secondary btn-sm">📋 Copy Tất Cả 6 Prompt (Cách 1 Dòng)</button>
+        </div>
+
+        <div id="scenesList" class="scenes-container"></div>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast">Notice message</div>
+
+  <!-- Edit User Modal Popup (Matching Image Design) -->
+  <div id="editUserModal" class="modal-backdrop" style="display: none;">
+    <div class="edit-modal-card">
+      <div class="edit-modal-header flex-between">
+        <h3>✏️ Chỉnh Sửa Tài Khoản</h3>
+        <button type="button" id="btnCloseEditModal" class="btn-close">&times;</button>
+      </div>
+      <form id="formEditUser" onsubmit="return false;">
+        <div class="form-group margin-b16">
+          <label class="form-label">Tên Tài Khoản (Username)</label>
+          <input type="text" id="editUsername" class="form-input readonly-input" readonly>
+        </div>
+
+        <div class="form-group margin-b16">
+          <label class="form-label">Mật Khẩu</label>
+          <div class="input-password-wrapper">
+            <input type="password" id="editPassword" class="form-input" required>
+            <button type="button" id="btnToggleEditPassVis" class="btn-pass-toggle" title="Hiện/Ẩn mật khẩu">👁️</button>
+          </div>
+        </div>
+
+        <div class="form-group margin-b16">
+          <label class="form-label">Thời Hạn Còn Lại (Số ngày)</label>
+          <div class="days-input-flex">
+            <input type="number" id="editRemainingDays" class="form-input" min="0" max="3650" value="7">
+            <span class="days-unit-tag">ngày</span>
+          </div>
+        </div>
+
+        <div class="form-group margin-b20">
+          <label class="checkbox-label flex-center">
+            <input type="checkbox" id="editIsActive" class="custom-checkbox">
+            <span>Trạng thái: Đã Kích Hoạt</span>
+          </label>
+        </div>
+
+        <div class="edit-modal-footer flex-end">
+          <button type="button" id="btnCancelEdit" class="btn btn-secondary">Hủy Bỏ</button>
+          <button type="submit" id="btnSaveEditUser" class="btn btn-primary" style="margin-left: 10px;">💾 Lưu Thay Đổi</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Firebase Web SDK JS -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/generator.js"></script>
+  <script src="../js/gemini.js"></script>
+  <script src="../js/app.js"></script>
+</body>
+</html>
