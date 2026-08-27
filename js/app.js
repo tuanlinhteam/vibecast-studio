@@ -769,8 +769,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.target.classList.contains('preset-pill')) {
       const selectedTopic = e.target.getAttribute('data-topic') || e.target.textContent.replace('💡 ', '');
       topicInput.value = selectedTopic;
-      runGeneration();
-      showToast(`💡 Đã chọn chủ đề: "${selectedTopic.substring(0, 30)}..."`);
+      showToast(`💡 Đã chọn chủ đề! Bấm nút "⚡ Phân Tích & Tạo Kịch Bản Viral" để tạo.`);
     }
   });
 
@@ -781,11 +780,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function runGeneration() {
     const topic = topicInput.value.trim();
-    const apiKey = geminiApiKeyInput.value.trim();
-    const model = geminiModelSelect.value;
+    if (!topic) {
+      showToast("⚠️ Vui lòng nhập hoặc chọn Chủ Đề Trình Bày trước khi bấm tạo!");
+      return;
+    }
 
     btnGenerate.disabled = true;
-    btnGenerate.textContent = "⏳ AI đang sáng tạo kịch bản...";
+    btnGenerate.textContent = "⏳ Đang phân tích & tạo kịch bản Viral...";
+    showToast("⏳ Đang phân tích chủ đề & sáng tạo kịch bản Viral...");
+
+    const apiKey = geminiApiKeyInput.value.trim();
+    const model = geminiModelSelect.value;
 
     let aiScenes = null;
     if (apiKey) {
@@ -807,9 +812,10 @@ document.addEventListener('DOMContentLoaded', () => {
         refImagePrompt: refImgPrompt,
         scenes: aiScenes
       };
-      showToast("✨ Gemini AI đã sáng tác Kịch Bản Chuyên Gia độc bản!");
+      showToast("✨ Gemini AI đã phân tích & tạo kịch bản Viral thành công!");
     } else {
       currentOutput = GENERATOR_ENGINE.generate(topic);
+      showToast("✨ Đã tạo kịch bản Viral chuẩn 6 cảnh thành công!");
     }
 
     btnGenerate.disabled = false;
@@ -963,5 +969,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Check auth session on startup
   checkSessionState();
-  runGeneration();
 });
