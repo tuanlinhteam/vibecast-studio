@@ -405,6 +405,38 @@ textarea.form-control {
   box-shadow: 0 6px 20px rgba(229, 169, 60, 0.4);
 }
 
+/* Eye-Catching Generate Button Style */
+#btnGenerate {
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  padding: 16px 20px !important;
+  border-radius: 12px !important;
+  background: linear-gradient(135deg, #f59e0b, #ec4899, #8b5cf6) !important;
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 6px 24px rgba(245, 158, 11, 0.4), 0 0 12px rgba(236, 72, 153, 0.3) !important;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+  transition: all 0.3s ease-in-out;
+  animation: pulse-glow 2s infinite alternate;
+}
+
+#btnGenerate:hover {
+  transform: translateY(-3px) scale(1.02) !important;
+  box-shadow: 0 10px 30px rgba(245, 158, 11, 0.6), 0 0 20px rgba(236, 72, 153, 0.5) !important;
+}
+
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 4px 18px rgba(245, 158, 11, 0.4), 0 0 10px rgba(236, 72, 153, 0.3);
+  }
+  100% {
+    box-shadow: 0 8px 28px rgba(245, 158, 11, 0.6), 0 0 20px rgba(139, 92, 246, 0.5);
+  }
+}
+
 .btn-secondary {
   background: #252a38;
   color: var(--text-main);
