@@ -813,7 +813,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     btnGenerate.disabled = false;
-    btnGenerate.textContent = "🚀 Tạo Kịch Bản & 6 Prompt Veo 3";
+    btnGenerate.textContent = "⚡ Phân Tích & Tạo Kịch Bản Viral";
 
     renderResults(currentOutput);
   }

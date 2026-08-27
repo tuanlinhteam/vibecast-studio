@@ -83,14 +83,20 @@ Yêu cầu trả về JSON Array chứa đúng 5 chuỗi tiêu đề ngắn gọ
 
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey.trim()}`;
 
-    const promptText = `Bạn là đạo diễn kiêm chuyên gia biên kịch video One-shot 9:16 triệu view.
-Chủ đề: "${topic}"
+    const promptText = `Bạn là đạo diễn kiêm chuyên gia biên kịch video One-shot 9:16 triệu view hàng đầu trên TikTok/Reels/Shorts.
+Chủ đề trình bày: "${topic}"
 
-YÊU CẦU NỘI DUNG VÀ QUY TẮC BẮT BUỘC:
-1. NÓI KHÔNG VỚI CÂU HỎI SÁO RỖNG KIỂU "Có bao giờ bạn tự hỏi...", "Hôm nay chúng ta sẽ nói về...".
-2. CẢNH 1 LÀ HOOK TRỰC DIỆN ĐẮT GIÁ: Đi thẳng vào câu chuyện/insight giật mình để giữ chân người xem ở lại ngay 1-2 giây đầu.
-3. Chia đúng 6 cảnh, tổng thời lượng 42-48s (mỗi cảnh 7-8 giây). Lời thoại là tiếng Việt đời thường sâu sắc, mang phong thái chuyên gia sắc bén nhưng truyền cảm.
-4. QUY TẮC KHÓA TUYỆT ĐỐI PROMPT VEO 3:
+CÔNG THỨC THÀNH CÔNG VIRAL BẮT BUỘC (6 CẢNH - 42-48 GIÂY):
+Cảnh 1 (Hook Giật Mình Viral): Đi thẳng vào một khẳng định đảo ngược suy nghĩ số đông hoặc insight nhức nhối để giữ chân người xem ở ngay 1-2 giây đầu. Tuyệt đối không dùng câu hỏi sáo rỗng.
+Cảnh 2 (Bóc Tách Góc Nhìn Chuyên Gia): Phân tích thâm nhập bản chất vấn đề vì sao số đông lại dễ ngộ nhận hoặc vấp phải sai lầm.
+Cảnh 3 (Chỉ Ra Điểm Mù & Hậu Quả Ngầm): Chạm tới cảm xúc đồng cảm sâu sắc, làm nổi bật nỗi đau ngầm nếu không thay đổi tư duy.
+Cảnh 4 (Giải Pháp Chuyên Gia Sắc Báo): Đưa ra tư duy/hành động đảo ngược tình thế mang tính đột phá (Aha Moment!).
+Cảnh 5 (Đóng Đinh Giá Trị Cốt Lõi - Quote Triệu View): Một câu chốt đắt giá truyền cảm hứng mạnh mẽ, khẳng định bản lĩnh tự chủ độc lập.
+Cảnh 6 (CTA Tranh Luận Viral): Kết mở đưa ra câu hỏi/lời mời thảo luận tự nhiên gây bão bình luận phía dưới video.
+
+QUY TẮC BẮT BUỘC VỀ LỜI THOẠI VÀ PROMPT VEO 3:
+1. Lời thoại là tiếng Việt đời thường sắc bén, mang phong thái chuyên gia tự tin, truyền cảm hứng.
+2. KHÓA TUYỆT ĐỐI PROMPT VEO 3:
    - KHÓA TUYỆT ĐỐI CHỮ TIẾNG VIỆT, TRANG PHỤC, NHÂN VẬT VÀ HÌNH ẢNH MẪU CỦA VIDEO GỐC: Không sai chữ, không đổi quần áo, không tự tái tạo hoặc sửa hình ảnh tham chiếu và dùng ảnh tham chiếu đó trực tiếp làm Start Frame / Ingredient.
    - Kiểm tra đầu ra và loại clip ngay khi sai!
    - Đầu prompt bắt đầu bằng: "VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Static tripod close-up medium shot looking directly into camera lens. Lock reference image directly as start frame / ingredient. STRICTLY LOCK CHARACTER FACE, OUTFIT, CLOTHING AND BACKGROUND CONTINUITY..."
@@ -102,9 +108,9 @@ Yêu cầu trả về duy nhất một cấu trúc JSON như sau:
   "scenes": [
     {
       "sceneNum": 1,
-      "goal": "Hook trực diện & Khẳng định ngầm hiểu",
+      "goal": "Hook Giật Mình Viral (1-2s đầu)",
       "dialogue": "Lời thoại cảnh 1...",
-      "expression": "Thần thái chuyên gia sắc bén, ánh mắt tự tin...",
+      "expression": "Thần thái chuyên gia sắc bén, nhìn thẳng camera thu hút...",
       "startPose": "Tư thế bắt đầu cảnh 1...",
       "endPose": "Tư thế kết thúc cảnh 1...",
       "veoPrompt": "VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Static tripod close-up medium shot... Lock reference image directly as start frame / ingredient. STRICTLY LOCK CHARACTER FACE, OUTFIT, CLOTHING AND BACKGROUND CONTINUITY... ABSOLUTELY NO VIETNAMESE TEXT, NO ON-SCREEN TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK. REJECT CLIP IMMEDIATELY IF CHARACTER OUTFIT OR FACE CHANGES OR ON-SCREEN TEXT APPEARS."
