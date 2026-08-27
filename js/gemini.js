@@ -85,7 +85,6 @@ Yêu cầu trả về JSON Array chứa đúng 5 chuỗi tiêu đề ngắn gọ
 
     const promptText = `Bạn là đạo diễn kiêm chuyên gia biên kịch video One-shot 9:16 triệu view.
 Chủ đề: "${topic}"
-Bối cảnh: "${contextObj.name || 'Quán Cà Phê Ấm Áp'}" (${contextObj.promptSnippet || ''})
 
 YÊU CẦU NỘI DUNG VÀ QUY TẮC BẮT BUỘC:
 1. NÓI KHÔNG VỚI CÂU HỎI SÁO RỖNG KIỂU "Có bao giờ bạn tự hỏi...", "Hôm nay chúng ta sẽ nói về...".
@@ -94,7 +93,7 @@ YÊU CẦU NỘI DUNG VÀ QUY TẮC BẮT BUỘC:
 4. QUY TẮC KHÓA TUYỆT ĐỐI PROMPT VEO 3:
    - KHÓA TUYỆT ĐỐI CHỮ TIẾNG VIỆT, TRANG PHỤC, NHÂN VẬT VÀ HÌNH ẢNH MẪU CỦA VIDEO GỐC: Không sai chữ, không đổi quần áo, không tự tái tạo hoặc sửa hình ảnh tham chiếu và dùng ảnh tham chiếu đó trực tiếp làm Start Frame / Ingredient.
    - Kiểm tra đầu ra và loại clip ngay khi sai!
-   - Đầu prompt bắt đầu bằng: "VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Static tripod close-up medium shot looking directly into camera lens. Lock reference image directly as start frame / ingredient. STRICTLY LOCK CHARACTER FACE, OUTFIT, CLOTHING AND BACKGROUND CONTUINUITY. ${contextObj.promptSnippet || ''}..."
+   - Đầu prompt bắt đầu bằng: "VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Static tripod close-up medium shot looking directly into camera lens. Lock reference image directly as start frame / ingredient. STRICTLY LOCK CHARACTER FACE, OUTFIT, CLOTHING AND BACKGROUND CONTINUITY..."
    - Cuối prompt kết thúc bằng: "ABSOLUTELY NO VIETNAMESE TEXT, NO ON-SCREEN TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK. REJECT CLIP IMMEDIATELY IF CHARACTER OUTFIT OR FACE CHANGES OR ON-SCREEN TEXT APPEARS."
    - TUYỆT ĐỐI KHÔNG NÊU MÔ TẢ TÊN, TUỔI HOẶC NGOẠI HÌNH NHÂN VẬT CỤ THỂ TRONG PROMPT VEO 3.
 

@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const topicInput = document.getElementById('topicInput');
   const btnGenerate = document.getElementById('btnGenerate');
   const presetsContainer = document.getElementById('presetsContainer');
-  const contextOptions = document.querySelectorAll('.context-card');
   const speechOutput = document.getElementById('speechOutput');
   const scenesList = document.getElementById('scenesList');
   const toast = document.getElementById('toast');
@@ -765,17 +764,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- 5. CONTEXT SELECTION & PRESETS ---
-  contextOptions.forEach(card => {
-    card.addEventListener('click', () => {
-      contextOptions.forEach(c => c.classList.remove('active'));
-      card.classList.add('active');
-      const radio = card.querySelector('input[type="radio"]');
-      radio.checked = true;
-      currentContext = radio.value;
-    });
-  });
-
+  // --- 5. PRESETS ---
   presetsContainer.addEventListener('click', (e) => {
     if (e.target.classList.contains('preset-pill')) {
       const selectedTopic = e.target.getAttribute('data-topic') || e.target.textContent.replace('💡 ', '');
@@ -794,7 +783,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const topic = topicInput.value.trim();
     const apiKey = geminiApiKeyInput.value.trim();
     const model = geminiModelSelect.value;
-    const ctxObj = GENERATOR_ENGINE.contexts[currentContext] || GENERATOR_ENGINE.contexts.coffee;
 
     btnGenerate.disabled = true;
     btnGenerate.textContent = "⏳ AI đang sáng tạo kịch bản...";
@@ -802,7 +790,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let aiScenes = null;
     if (apiKey) {
       try {
-        aiScenes = await GEMINI_SERVICE.generateExpertScript(apiKey, model, topic, ctxObj);
+        aiScenes = await GEMINI_SERVICE.generateExpertScript(apiKey, model, topic);
       } catch (e) {
         console.warn("AI Script generation failed, using local engine:", e);
       }
@@ -810,10 +798,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (aiScenes && Array.isArray(aiScenes) && aiScenes.length === 6) {
       const fullText = aiScenes.map(s => s.dialogue).join(" ");
-      const refImgPrompt = GENERATOR_ENGINE.buildRefImagePrompt(ctxObj);
+      const refImgPrompt = GENERATOR_ENGINE.buildRefImagePrompt();
       currentOutput = {
         topic: topic,
-        context: ctxObj,
         voiceSpec: "Giọng Nam chuyên gia (25-28 tuổi), phát âm chuẩn, trầm ấm, rõ chữ, phong thái tự tin và truyền cảm hứng",
         fullSpeech: fullText,
         totalDuration: "45 giây (6 cảnh × 7.5 giây)",
@@ -822,7 +809,7 @@ document.addEventListener('DOMContentLoaded', () => {
       };
       showToast("✨ Gemini AI đã sáng tác Kịch Bản Chuyên Gia độc bản!");
     } else {
-      currentOutput = GENERATOR_ENGINE.generate(topic, currentContext);
+      currentOutput = GENERATOR_ENGINE.generate(topic);
     }
 
     btnGenerate.disabled = false;
@@ -893,7 +880,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btnCopyRefPrompt.addEventListener('click', () => {
       if (currentOutput && currentOutput.refImagePrompt) {
         copyToClipboard(currentOutput.refImagePrompt);
-        showToast("🖼️ Đã copy Prompt Tạo Ảnh Bối Cảnh (9:16)!");
+        showToast("🖼️ Đã copy Prompt Tạo Ảnh Tham Chiếu (9:16)!");
       }
     });
   }
@@ -921,12 +908,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let content = `=========================================\n`;
     content += `KỊCH BẢN ONE-SHOT 9:16 (VIBECAST STUDIO)\n`;
     content += `Chủ đề: ${currentOutput.topic}\n`;
-    content += `Bối cảnh: ${currentOutput.context.name}\n`;
     content += `Giọng đọc: ${currentOutput.voiceSpec}\n`;
     content += `=========================================\n\n`;
     content += `LỜI THOẠI HOÀN CHỈNH:\n${currentOutput.fullSpeech}\n\n`;
     content += `=========================================\n`;
-    content += `PROMPT TẠO ẢNH BỐI CẢNH KHÓA CONTINUITY (9:16):\n${currentOutput.refImagePrompt || ''}\n\n`;
+    content += `PROMPT TẠO ẢNH THAM CHIẾU MẪU (9:16):\n${currentOutput.refImagePrompt || ''}\n\n`;
     content += `=========================================\n`;
     content += `BẢNG 6 PROMPT VEO 3:\n\n`;
 

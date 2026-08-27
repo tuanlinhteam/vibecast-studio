@@ -24,19 +24,17 @@ const GENERATOR_ENGINE = {
     }
   },
 
-  // Generate complete package based on topic and context
-  generate: function(topic, contextKey = 'coffee', characterMeta = null, customVoice = '') {
-    const ctx = this.contexts[contextKey] || this.contexts.coffee;
+  // Generate complete package based on topic
+  generate: function(topic, characterMeta = null, customVoice = '') {
     const cleanTopic = topic.trim() || "Phụ nữ tự chủ tài chính trong hôn nhân hiện đại";
 
     // Build unique expert scenes & reference image prompt (no character description)
-    const scenesData = this.buildExpertScenes(cleanTopic, ctx);
-    const refImagePrompt = this.buildRefImagePrompt(ctx);
+    const scenesData = this.buildExpertScenes(cleanTopic);
+    const refImagePrompt = this.buildRefImagePrompt();
     const fullText = scenesData.map(s => s.dialogue).join(" ");
     
     return {
       topic: cleanTopic,
-      context: ctx,
       voiceSpec: customVoice || "Giọng Nam chuyên gia (25-28 tuổi), phát âm chuẩn, trầm ấm, rõ chữ, phong thái tự tin và truyền cảm hứng",
       fullSpeech: fullText,
       totalDuration: "45 giây (6 cảnh × 7.5 giây)",
@@ -46,12 +44,12 @@ const GENERATOR_ENGINE = {
   },
 
   // Build Reference Image Prompt (Midjourney / FLUX / Imagen 3 / DALL-E 3)
-  buildRefImagePrompt: function(ctx) {
-    return `Vertical 9:16 portrait photograph. Medium close-up shot facing directly into camera lens. ${ctx.promptSnippet}. Soft natural cinematic lighting, detailed texture, professional studio photography, 8k resolution, photorealistic, sharp focus. ABSOLUTELY NO TEXT, NO LOGO, NO WATERMARK, NO SUBTITLES. --ar 9:16`;
+  buildRefImagePrompt: function() {
+    return `Vertical 9:16 portrait photograph. Medium close-up shot facing directly into camera lens. Soft natural cinematic lighting, detailed texture, professional studio photography, 8k resolution, photorealistic, sharp focus. ABSOLUTELY NO TEXT, NO LOGO, NO WATERMARK, NO SUBTITLES. --ar 9:16`;
   },
 
   // Generate dynamic expert scripts & unique Veo 3 prompts
-  buildExpertScenes: function(topic, ctx) {
+  buildExpertScenes: function(topic) {
     const topicLower = topic.toLowerCase();
 
     // Categorize topic to generate tailored expert hooks & insights
@@ -134,7 +132,7 @@ const GENERATOR_ENGINE = {
           expression: "Nhìn thẳng camera với ánh mắt sâu sắc của người từng trải.",
           startPose: "Khoanh tay tĩnh tại, tựa lưng nhẹ vào ghế.",
           endPose: "Thả tay xuống bàn, nghiêng nhẹ người về phía trước.",
-          veoPrompt: `VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Medium close-up sitting in ${ctx.promptSnippet}. Speaks with strong presence in Vietnamese: 'Khủng hoảng tuổi 30 chưa bao giờ đến từ con số tuổi tác...'. Photorealistic quality, static camera. ABSOLUTELY NO TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK.`
+          veoPrompt: `VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Medium close-up sitting confidently. Lock reference image directly as start frame / ingredient. STRICTLY LOCK CHARACTER FACE, OUTFIT AND CLOTHING. Speaks with strong presence in Vietnamese: 'Khủng hoảng tuổi 30 chưa bao giờ đến từ con số tuổi tác...'. ABSOLUTELY NO VIETNAMESE TEXT, NO ON-SCREEN TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK. REJECT CLIP IMMEDIATELY IF CHARACTER OUTFIT OR FACE CHANGES OR ON-SCREEN TEXT APPEARS.`
         },
         {
           sceneNum: 2,
@@ -143,7 +141,7 @@ const GENERATOR_ENGINE = {
           expression: "Nét mặt trầm tĩnh, gật đầu nhẹ.",
           startPose: "Một tay chạm nhẹ ngực, tay kia trên bàn.",
           endPose: "Mở hai tay ra hai bên.",
-          veoPrompt: `VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Seamless scene match speaking in ${ctx.promptSnippet}: 'Xã hội dạy chúng ta phải ổn định trước tuổi 30, nhưng lại không dạy chúng ta cách lắng nghe...'. Perfect continuity. ABSOLUTELY NO TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK.`
+          veoPrompt: `VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Seamless scene match speaking in Vietnamese: 'Xã hội dạy chúng ta phải ổn định trước tuổi 30, nhưng lại không dạy chúng ta cách lắng nghe...'. Lock reference image directly as start frame / ingredient. STRICTLY LOCK CHARACTER FACE, OUTFIT AND CLOTHING. ABSOLUTELY NO VIETNAMESE TEXT, NO ON-SCREEN TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK. REJECT CLIP IMMEDIATELY IF CHARACTER OUTFIT OR FACE CHANGES OR ON-SCREEN TEXT APPEARS.`
         },
         {
           sceneNum: 3,
@@ -152,7 +150,7 @@ const GENERATOR_ENGINE = {
           expression: "Ánh mắt điềm tĩnh nhưng chứa đựng sự thấu hiểu sâu sắc.",
           startPose: "Bàn tay nắm nhẹ trên bàn.",
           endPose: "Mở lòng bàn tay, thở nhẹ tự nhiên.",
-          veoPrompt: `VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Continuous setup speaking warmly: 'Chạy theo một tiêu chuẩn không thuộc về mình chỉ khiến bạn chạm tới cái gọi là thành công trong sự trống rỗng...'. ${ctx.promptSnippet}. ABSOLUTELY NO TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK.`
+          veoPrompt: `VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Continuous setup speaking warmly: 'Chạy theo một tiêu chuẩn không thuộc về mình chỉ khiến bạn chạm tới cái gọi là thành công trong sự trống rỗng...'. Lock reference image directly as start frame / ingredient. STRICTLY LOCK CHARACTER FACE, OUTFIT AND CLOTHING. ABSOLUTELY NO VIETNAMESE TEXT, NO ON-SCREEN TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK. REJECT CLIP IMMEDIATELY IF CHARACTER OUTFIT OR FACE CHANGES OR ON-SCREEN TEXT APPEARS.`
         },
         {
           sceneNum: 4,
@@ -161,7 +159,7 @@ const GENERATOR_ENGINE = {
           expression: "Thần thái tự tin, nụ cười kiên định.",
           startPose: "Ngồi thẳng lưng, hai tay đặt vững trên bàn.",
           endPose: "Nhìn thẳng vào ống kính, gật đầu khẳng định.",
-          veoPrompt: `VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Professional shot in ${ctx.promptSnippet}, speaking: 'Thành công thực sự ở tuổi 30 không phải là có bao nhiêu tài sản, mà là bạn có đủ bản lĩnh...'. ABSOLUTELY NO TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK.`
+          veoPrompt: `VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Professional shot speaking: 'Thành công thực sự ở tuổi 30 không phải là có bao nhiêu tài sản, mà là bạn có đủ bản lĩnh...'. Lock reference image directly as start frame / ingredient. STRICTLY LOCK CHARACTER FACE, OUTFIT AND CLOTHING. ABSOLUTELY NO VIETNAMESE TEXT, NO ON-SCREEN TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK. REJECT CLIP IMMEDIATELY IF CHARACTER OUTFIT OR FACE CHANGES OR ON-SCREEN TEXT APPEARS.`
         },
         {
           sceneNum: 5,
@@ -170,7 +168,7 @@ const GENERATOR_ENGINE = {
           expression: "Ánh mắt tràn đầy năng lượng tích cực và sự bao dung.",
           startPose: "Một tay giơ nhẹ nhịp theo lời nói.",
           endPose: "Thu tay về bàn, mỉm cười dịu dàng.",
-          veoPrompt: `VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Continuous video stream speaking smoothly: 'Mỗi người đều có một múi giờ phát triển riêng. Chậm lại một chút để đi đúng hướng...'. ${ctx.promptSnippet}. ABSOLUTELY NO TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK.`
+          veoPrompt: `VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Continuous video stream speaking smoothly: 'Mỗi người đều có một múi giờ phát triển riêng. Chậm lại một chút để đi đúng hướng...'. Lock reference image directly as start frame / ingredient. STRICTLY LOCK CHARACTER FACE, OUTFIT AND CLOTHING. ABSOLUTELY NO VIETNAMESE TEXT, NO ON-SCREEN TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK. REJECT CLIP IMMEDIATELY IF CHARACTER OUTFIT OR FACE CHANGES OR ON-SCREEN TEXT APPEARS.`
         },
         {
           sceneNum: 6,
@@ -179,7 +177,7 @@ const GENERATOR_ENGINE = {
           expression: "Nụ cười rạng rỡ, thần thái ấm áp.",
           startPose: "Thả lỏng vai, hai tay đặt tự nhiên trên bàn.",
           endPose: "Mỉm cười nhìn thẳng camera 1s sau khi thoại.",
-          veoPrompt: `VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Final 6th scene finishes speaking with an encouraging smile: 'Bạn đang ở giai đoạn nào trên hành trình của mình? Hãy để lại một lời nhắn...'. ${ctx.promptSnippet}. ABSOLUTELY NO TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK.`
+          veoPrompt: `VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Final 6th scene finishes speaking with an encouraging smile: 'Bạn đang ở giai đoạn nào trên hành trình của mình? Hãy để lại một lời nhắn...'. Lock reference image directly as start frame / ingredient. STRICTLY LOCK CHARACTER FACE, OUTFIT AND CLOTHING. ABSOLUTELY NO VIETNAMESE TEXT, NO ON-SCREEN TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK. REJECT CLIP IMMEDIATELY IF CHARACTER OUTFIT OR FACE CHANGES OR ON-SCREEN TEXT APPEARS.`
         }
       ];
     } else {
@@ -192,7 +190,7 @@ const GENERATOR_ENGINE = {
           expression: "Thần thái chuyên gia sắc bén, nhìn thẳng ống kính thu hút khán giả ngay lập tức.",
           startPose: "Ngồi thẳng tự nhiên, hai tay đặt nhẹ trên bàn.",
           endPose: "Nghiêng đầu nhẹ, hai mắt xoáy sâu vào camera.",
-          veoPrompt: `VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Close-up medium shot in ${ctx.promptSnippet}. Speaks with authoritative tone in Vietnamese: 'Sai lầm lớn nhất của chúng ta khi nhìn nhận về ${topic} là đánh giá nó qua cái nhìn của số đông...'. Static camera shot, cinematic 8k. ABSOLUTELY NO TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK, NO UI.`
+          veoPrompt: `VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Close-up medium shot. Speaks with authoritative tone in Vietnamese: 'Sai lầm lớn nhất của chúng ta khi nhìn nhận về ${topic} là đánh giá nó qua cái nhìn của số đông...'. Lock reference image directly as start frame / ingredient. STRICTLY LOCK CHARACTER FACE, OUTFIT AND CLOTHING. ABSOLUTELY NO VIETNAMESE TEXT, NO ON-SCREEN TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK. REJECT CLIP IMMEDIATELY IF CHARACTER OUTFIT OR FACE CHANGES OR ON-SCREEN TEXT APPEARS.`
         },
         {
           sceneNum: 2,
@@ -201,7 +199,7 @@ const GENERATOR_ENGINE = {
           expression: "Trầm tĩnh, gật đầu nhẹ để khẳng định lập luận.",
           startPose: "Một tay mở nhẹ hướng về phía người xem.",
           endPose: "Đưa tay về đan nhẹ trên bàn.",
-          veoPrompt: `VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Seamless continuation speaking in ${ctx.promptSnippet}: 'Khi bạn quan sát đủ sâu, bạn sẽ nhận ra mọi mâu thuẫn hay áp lực...'. Flawless video continuity. ABSOLUTELY NO TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK.`
+          veoPrompt: `VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Seamless continuation speaking: 'Khi bạn quan sát đủ sâu, bạn sẽ nhận ra mọi mâu thuẫn hay áp lực...'. Lock reference image directly as start frame / ingredient. STRICTLY LOCK CHARACTER FACE, OUTFIT AND CLOTHING. ABSOLUTELY NO VIETNAMESE TEXT, NO ON-SCREEN TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK. REJECT CLIP IMMEDIATELY IF CHARACTER OUTFIT OR FACE CHANGES OR ON-SCREEN TEXT APPEARS.`
         },
         {
           sceneNum: 3,
@@ -210,7 +208,7 @@ const GENERATOR_ENGINE = {
           expression: "Nét mặt suy ngẫm, ánh mắt chân thành.",
           startPose: "Giữ hai tay trên bàn, vai thả lỏng.",
           endPose: "Hơi nâng cằm nhẹ, ánh mắt kiên định.",
-          veoPrompt: `VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Static tripod shot speaking directly to camera: 'Chúng ta thường cố gắng thay đổi hoàn cảnh bên ngoài, nhưng lại quên mất rằng tư duy mới là thứ quyết định...'. ${ctx.promptSnippet}. ABSOLUTELY NO TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK.`
+          veoPrompt: `VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Static tripod shot speaking directly to camera: 'Chúng ta thường cố gắng thay đổi hoàn cảnh bên ngoài, nhưng lại quên mất rằng tư duy mới là thứ quyết định...'. Lock reference image directly as start frame / ingredient. STRICTLY LOCK CHARACTER FACE, OUTFIT AND CLOTHING. ABSOLUTELY NO VIETNAMESE TEXT, NO ON-SCREEN TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK. REJECT CLIP IMMEDIATELY IF CHARACTER OUTFIT OR FACE CHANGES OR ON-SCREEN TEXT APPEARS.`
         },
         {
           sceneNum: 4,
@@ -219,7 +217,7 @@ const GENERATOR_ENGINE = {
           expression: "Ánh mắt ấm áp, nụ cười nhẹ truyền niềm tin.",
           startPose: "Đặt tay lên ngực trái nhẹ nhàng.",
           endPose: "Mở tay ra phía trước tự nhiên.",
-          veoPrompt: `VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Continuation cut in ${ctx.promptSnippet}, speaking with warm confidence: 'Thay vì chống lại những điều không thể kiểm soát, hãy tập trung xây dựng nội lực...'. ABSOLUTELY NO TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK.`
+          veoPrompt: `VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Continuation cut speaking with warm confidence: 'Thay vì chống lại những điều không thể kiểm soát, hãy tập trung xây dựng nội lực...'. Lock reference image directly as start frame / ingredient. STRICTLY LOCK CHARACTER FACE, OUTFIT AND CLOTHING. ABSOLUTELY NO VIETNAMESE TEXT, NO ON-SCREEN TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK. REJECT CLIP IMMEDIATELY IF CHARACTER OUTFIT OR FACE CHANGES OR ON-SCREEN TEXT APPEARS.`
         },
         {
           sceneNum: 5,
@@ -228,7 +226,7 @@ const GENERATOR_ENGINE = {
           expression: "Thần thái sang trọng, nụ cười dịu dàng tự tin.",
           startPose: "Ngồi tựa lưng thoải mái, tay đặt trên bàn.",
           endPose: "Gật đầu dứt khoát, nụ cười tươi nhẹ.",
-          veoPrompt: `VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Seamless continuous shot speaking warmly: 'Sự trưởng thành thật sự là khi bạn tìm thấy sự bình an ngay giữa những biến động...'. ${ctx.promptSnippet}. ABSOLUTELY NO TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK.`
+          veoPrompt: `VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Seamless continuous shot speaking warmly: 'Sự trưởng thành thật sự là khi bạn tìm thấy sự bình an ngay giữa những biến động...'. Lock reference image directly as start frame / ingredient. STRICTLY LOCK CHARACTER FACE, OUTFIT AND CLOTHING. ABSOLUTELY NO VIETNAMESE TEXT, NO ON-SCREEN TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK. REJECT CLIP IMMEDIATELY IF CHARACTER OUTFIT OR FACE CHANGES OR ON-SCREEN TEXT APPEARS.`
         },
         {
           sceneNum: 6,
@@ -237,7 +235,7 @@ const GENERATOR_ENGINE = {
           expression: "Nụ cười rạng rỡ lắng nghe, ánh mắt thân thiện.",
           startPose: "Nghiêng đầu nhẹ sang một bên.",
           endPose: "Giữ ánh mắt nhìn thẳng camera 1s sau khi kết thúc câu thoại.",
-          veoPrompt: `VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Final 6th scene finishes speaking with an inviting smile: 'Góc nhìn của bạn thế nào về vấn đề này? Hãy để lại bình luận phía dưới...'. ${ctx.promptSnippet}. Holds eye contact for 1 second. ABSOLUTELY NO TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK.`
+          veoPrompt: `VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Final 6th scene finishes speaking with an inviting smile: 'Góc nhìn của bạn thế nào về vấn đề này? Hãy để lại bình luận phía dưới...'. Lock reference image directly as start frame / ingredient. STRICTLY LOCK CHARACTER FACE, OUTFIT AND CLOTHING. ABSOLUTELY NO VIETNAMESE TEXT, NO ON-SCREEN TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK. REJECT CLIP IMMEDIATELY IF CHARACTER OUTFIT OR FACE CHANGES OR ON-SCREEN TEXT APPEARS.`
         }
       ];
     }
