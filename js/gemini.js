@@ -71,49 +71,49 @@ Yêu cầu trả về JSON Array chứa đúng 5 chuỗi tiêu đề ngắn gọ
     }
   },
 
-  // 2. Generate Full 6-Scene Expert Script via Gemini AI
-  generateExpertScript: async function(apiKey, model = 'gemini-3.6-flash', topic = '', contextObj = {}, charSnippet = '') {
+  // 2. Generate Full 6-Scene Expert Script via Gemini AI (Content Win Formula)
+  generateExpertScript: async function(apiKey, model = 'gemini-1.5-flash', topic = '') {
     if (!apiKey) {
-      return null;
+      throw new Error("Vui lòng nhập Gemini API Key trước khi bấm tạo kịch bản AI!");
     }
 
     const cleanModel = model.trim();
-    const allowedModels = ['gemini-3.6-flash', 'gemini-3.7-flash'];
-    const activeModel = allowedModels.includes(cleanModel) ? cleanModel : 'gemini-3.6-flash';
+    const allowedModels = ['gemini-1.5-flash', 'gemini-2.0-flash', 'gemini-1.5-pro', 'gemini-3.6-flash', 'gemini-3.7-flash'];
+    const activeModel = allowedModels.includes(cleanModel) ? cleanModel : 'gemini-1.5-flash';
 
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey.trim()}`;
 
-    const promptText = `Bạn là đạo diễn kiêm chuyên gia biên kịch video One-shot 9:16 triệu view hàng đầu trên TikTok/Reels/Shorts.
-Chủ đề trình bày: "${topic}"
+    const promptText = `Bạn là Đạo diễn kiêm Master Content Creator sáng tạo video One-shot 9:16 triệu view trên TikTok/Reels/Shorts.
+Nhiệm vụ của bạn: Dựa trên chủ đề "${topic}", viết một KỊCH BẢN LỜI THOẠI ĐỘC BẢN, SẮC BÉN, CỰC KỲ KHÁC BIỆT áp dụng ĐÚNG CÔNG THỨC CONTENT WIN (6 CẢNH - TỔNG THỜI LƯỢNG 42-48 GIÂY).
 
-CÔNG THỨC THÀNH CÔNG VIRAL BẮT BUỘC (6 CẢNH - 42-48 GIÂY):
-Cảnh 1 (Hook Giật Mình Viral): Đi thẳng vào một khẳng định đảo ngược suy nghĩ số đông hoặc insight nhức nhối để giữ chân người xem ở ngay 1-2 giây đầu. Tuyệt đối không dùng câu hỏi sáo rỗng.
-Cảnh 2 (Bóc Tách Góc Nhìn Chuyên Gia): Phân tích thâm nhập bản chất vấn đề vì sao số đông lại dễ ngộ nhận hoặc vấp phải sai lầm.
-Cảnh 3 (Chỉ Ra Điểm Mù & Hậu Quả Ngầm): Chạm tới cảm xúc đồng cảm sâu sắc, làm nổi bật nỗi đau ngầm nếu không thay đổi tư duy.
-Cảnh 4 (Giải Pháp Chuyên Gia Sắc Báo): Đưa ra tư duy/hành động đảo ngược tình thế mang tính đột phá (Aha Moment!).
-Cảnh 5 (Đóng Đinh Giá Trị Cốt Lõi - Quote Triệu View): Một câu chốt đắt giá truyền cảm hứng mạnh mẽ, khẳng định bản lĩnh tự chủ độc lập.
-Cảnh 6 (CTA Tranh Luận Viral): Kết mở đưa ra câu hỏi/lời mời thảo luận tự nhiên gây bão bình luận phía dưới video.
+YÊU CẦU LỜI THOẠI ĐỘC BẢN & PHONG CÁCH CHUYÊN GIA:
+1. TUYỆT ĐỐI KHÔNG DÙNG LỜI THOẠI RẬP KHUÔN HAY MẪU CÓ SẴN. Viết mới 100% lời thoại dành riêng cho chủ đề "${topic}".
+2. Lời thoại là tiếng Việt đời thường sâu sắc, sắc bén, góc nhìn chuyên gia tự tin, truyền cảm hứng và đánh trúng tâm lý số đông.
 
-QUY TẮC BẮT BUỘC VỀ LỜI THOẠI VÀ PROMPT VEO 3:
-1. Lời thoại là tiếng Việt đời thường sắc bén, mang phong thái chuyên gia tự tin, truyền cảm hứng.
-2. KHÓA TUYỆT ĐỐI PROMPT VEO 3:
-   - KHÓA TUYỆT ĐỐI CHỮ TIẾNG VIỆT, TRANG PHỤC, NHÂN VẬT VÀ HÌNH ẢNH MẪU CỦA VIDEO GỐC: Không sai chữ, không đổi quần áo, không tự tái tạo hoặc sửa hình ảnh tham chiếu và dùng ảnh tham chiếu đó trực tiếp làm Start Frame / Ingredient.
-   - Kiểm tra đầu ra và loại clip ngay khi sai!
-   - Đầu prompt bắt đầu bằng: "VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Static tripod close-up medium shot looking directly into camera lens. Lock reference image directly as start frame / ingredient. STRICTLY LOCK CHARACTER FACE, OUTFIT, CLOTHING AND BACKGROUND CONTINUITY..."
-   - Cuối prompt kết thúc bằng: "ABSOLUTELY NO VIETNAMESE TEXT, NO ON-SCREEN TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK. REJECT CLIP IMMEDIATELY IF CHARACTER OUTFIT OR FACE CHANGES OR ON-SCREEN TEXT APPEARS."
-   - TUYỆT ĐỐI KHÔNG NÊU MÔ TẢ TÊN, TUỔI HOẶC NGOẠI HÌNH NHÂN VẬT CỤ THỂ TRONG PROMPT VEO 3.
+CÔNG THỨC CONTENT WIN BẮT BUỘC (6 CẢNH):
+- Cảnh 1 (Hook Đội Nỗi Đau & Đảo Ngược Suy Nghĩ 1-2s): Đi thẳng vào khẳng định gây bất ngờ hoặc insight nhức nhối nhất của chủ đề "${topic}". Tuyệt đối KHÔNG dùng câu hỏi sáo rỗng kiểu "Bạn có biết...", "Hôm nay...".
+- Cảnh 2 (Bóc Tách Bản Chất Sai Lầm): Phân tích vì sao số đông lại vấp phải góc nhìn sai lệch hoặc điểm mù tâm lý về "${topic}".
+- Cảnh 3 (Chạm Vào Nỗi Đau Ngầm): Nói đúng cảm xúc dồn nén, sự kiệt sức hoặc hậu quả nếu cứ tiếp tục đi theo lối mòn cũ.
+- Cảnh 4 (Giải Pháp Đột Phá - Aha Moment): Đưa ra góc nhìn mới hoàn toàn sắc bén, giải phóng tư duy cho người nghe.
+- Cảnh 5 (Đóng Đinh Giá Trị Cốt Lõi - Quote Triệu View): Một câu chốt kinh điển đắt giá, thể hiện phong thái tự chủ, bản lĩnh độc lập.
+- Cảnh 6 (CTA Bão Bình Luận): Lời kết mở đưa ra góc nhìn/câu hỏi kích thích khán giả phải để lại bình luận tranh luận bên dưới.
 
-Yêu cầu trả về duy nhất một cấu trúc JSON như sau:
+QUY TẮC BẮT BUỘC PROMPT VEO 3:
+- KHÓA TUYỆT ĐỐI CHỮ TIẾNG VIỆT, TRANG PHỤC, NHÂN VẬT VÀ HÌNH ẢNH MẪU CỦA VIDEO GỐC: Không sai chữ, không đổi quần áo, dùng ảnh tham chiếu trực tiếp làm Start Frame / Ingredient.
+- Đầu veoPrompt bắt đầu: "VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Static tripod close-up medium shot looking directly into camera lens. Lock reference image directly as start frame / ingredient. STRICTLY LOCK CHARACTER FACE, OUTFIT, CLOTHING AND BACKGROUND CONTINUITY..."
+- Cuối veoPrompt kết thúc: "ABSOLUTELY NO VIETNAMESE TEXT, NO ON-SCREEN TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK. REJECT CLIP IMMEDIATELY IF CHARACTER OUTFIT OR FACE CHANGES OR ON-SCREEN TEXT APPEARS."
+
+Trả về duy nhất cấu trúc JSON chuẩn:
 {
   "scenes": [
     {
       "sceneNum": 1,
-      "goal": "Hook Giật Mình Viral (1-2s đầu)",
-      "dialogue": "Lời thoại cảnh 1...",
-      "expression": "Thần thái chuyên gia sắc bén, nhìn thẳng camera thu hút...",
+      "goal": "Hook Đội Nỗi Đau & Đảo Ngược Suy Nghĩ (1-2s)",
+      "dialogue": "Lời thoại độc bản cảnh 1 sắc bén cho chủ đề...",
+      "expression": "Thần thái chuyên gia sắc bén, ánh mắt xoáy sâu vào ống kính...",
       "startPose": "Tư thế bắt đầu cảnh 1...",
       "endPose": "Tư thế kết thúc cảnh 1...",
-      "veoPrompt": "VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Static tripod close-up medium shot... Lock reference image directly as start frame / ingredient. STRICTLY LOCK CHARACTER FACE, OUTFIT, CLOTHING AND BACKGROUND CONTINUITY... ABSOLUTELY NO VIETNAMESE TEXT, NO ON-SCREEN TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK. REJECT CLIP IMMEDIATELY IF CHARACTER OUTFIT OR FACE CHANGES OR ON-SCREEN TEXT APPEARS."
+      "veoPrompt": "VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Static tripod close-up medium shot looking directly into camera lens. Lock reference image directly as start frame / ingredient. STRICTLY LOCK CHARACTER FACE, OUTFIT, CLOTHING AND BACKGROUND CONTINUITY. Looks directly into camera lens and speaks with natural lip-sync in Vietnamese: '[Nội dung câu thoại cảnh 1...]'. ABSOLUTELY NO VIETNAMESE TEXT, NO ON-SCREEN TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK. REJECT CLIP IMMEDIATELY IF CHARACTER OUTFIT OR FACE CHANGES OR ON-SCREEN TEXT APPEARS."
     },
     ... (đủ 6 cảnh)
   ]
@@ -125,34 +125,36 @@ Yêu cầu trả về duy nhất một cấu trúc JSON như sau:
       ],
       generationConfig: {
         responseMimeType: "application/json",
-        temperature: 0.8,
-        maxOutputTokens: 2500
+        temperature: 0.85,
+        maxOutputTokens: 3000
       }
     };
 
-    try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestBody)
-      });
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestBody)
+    });
 
-      if (!response.ok) return null;
-
-      const data = await response.json();
-      const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-      
-      const cleanJson = rawText.replace(/```json/gi, '').replace(/```/gi, '').trim();
-      const parsedObj = JSON.parse(cleanJson);
-
-      if (parsedObj && Array.isArray(parsedObj.scenes) && parsedObj.scenes.length === 6) {
-        return parsedObj.scenes;
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      let msg = errorData.error?.message || `Mã lỗi HTTP ${response.status}`;
+      if (response.status === 400 && msg.includes('API key')) {
+        msg = `Gemini API Key không hợp lệ. Vui lòng kiểm tra lại API Key.`;
       }
-      return null;
-    } catch (err) {
-      console.warn("Gemini Expert Script AI generation failed, fallback to local engine:", err);
-      return null;
+      throw new Error(msg);
     }
+
+    const data = await response.json();
+    const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    
+    const cleanJson = rawText.replace(/```json/gi, '').replace(/```/gi, '').trim();
+    const parsedObj = JSON.parse(cleanJson);
+
+    if (parsedObj && Array.isArray(parsedObj.scenes) && parsedObj.scenes.length === 6) {
+      return parsedObj.scenes;
+    }
+    throw new Error("Dữ liệu Gemini trả về không đúng cấu trúc 6 cảnh.");
   },
 
   // Bulletproof JSON and Line Parser

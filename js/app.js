@@ -792,13 +792,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const apiKey = geminiApiKeyInput.value.trim();
     const model = geminiModelSelect.value;
 
+    if (!apiKey) {
+      btnGenerate.disabled = false;
+      btnGenerate.textContent = "⚡ Phân Tích & Tạo Kịch Bản Viral";
+      showToast("⚠️ Vui lòng nhập Gemini API Key để AI sáng tạo lời thoại kịch bản độc bản!");
+      return;
+    }
+
     let aiScenes = null;
-    if (apiKey) {
-      try {
-        aiScenes = await GEMINI_SERVICE.generateExpertScript(apiKey, model, topic);
-      } catch (e) {
-        console.warn("AI Script generation failed, using local engine:", e);
-      }
+    try {
+      aiScenes = await GEMINI_SERVICE.generateExpertScript(apiKey, model, topic);
+    } catch (e) {
+      console.error("AI Script generation failed:", e);
+      showToast(`❌ Lỗi AI: ${e.message || 'Không thể tạo kịch bản từ Gemini AI'}`);
+      btnGenerate.disabled = false;
+      btnGenerate.textContent = "⚡ Phân Tích & Tạo Kịch Bản Viral";
+      return;
     }
 
     if (aiScenes && Array.isArray(aiScenes) && aiScenes.length === 6) {
@@ -812,10 +821,9 @@ document.addEventListener('DOMContentLoaded', () => {
         refImagePrompt: refImgPrompt,
         scenes: aiScenes
       };
-      showToast("✨ Gemini AI đã phân tích & tạo kịch bản Viral thành công!");
+      showToast("✨ Gemini AI đã phân tích & tạo kịch bản Content Win độc bản thành công!");
     } else {
-      currentOutput = GENERATOR_ENGINE.generate(topic);
-      showToast("✨ Đã tạo kịch bản Viral chuẩn 6 cảnh thành công!");
+      showToast("⚠️ Không thể tạo kịch bản từ Gemini AI. Vui lòng kiểm tra lại Key hoặc Model.");
     }
 
     btnGenerate.disabled = false;
