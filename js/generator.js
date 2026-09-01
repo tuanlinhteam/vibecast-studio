@@ -240,6 +240,8 @@ const GENERATOR_ENGINE = {
           veoPrompt: `VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Final 6th scene finishes speaking with an inviting smile: 'Góc nhìn của bạn thế nào về vấn đề này? Hãy để lại bình luận phía dưới...'. Lock reference image directly as start frame / ingredient. STRICTLY LOCK CHARACTER FACE, OUTFIT AND CLOTHING. ABSOLUTELY NO VIETNAMESE TEXT, NO ON-SCREEN TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK. REJECT CLIP IMMEDIATELY IF CHARACTER OUTFIT OR FACE CHANGES OR ON-SCREEN TEXT APPEARS.`
         }
       ];
+    }
+
     if (scenes.length > count) {
       const hook = scenes[0];
       const cta = scenes[scenes.length - 1];
