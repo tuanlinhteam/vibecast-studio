@@ -24,12 +24,13 @@ const GENERATOR_ENGINE = {
     }
   },
 
-  // Generate complete package based on topic
-  generate: function(topic, characterMeta = null, customVoice = '') {
+  // Generate complete package based on topic and scene count
+  generate: function(topic, sceneCount = 6, characterMeta = null, customVoice = '') {
     const cleanTopic = topic.trim() || "Phụ nữ tự chủ tài chính trong hôn nhân hiện đại";
+    const count = parseInt(sceneCount) || 6;
 
     // Build unique expert scenes & reference image prompt (no character description)
-    const scenesData = this.buildExpertScenes(cleanTopic);
+    const scenesData = this.buildExpertScenes(cleanTopic, count);
     const refImagePrompt = this.buildRefImagePrompt();
     const fullText = scenesData.map(s => s.dialogue).join(" ");
     
@@ -37,7 +38,7 @@ const GENERATOR_ENGINE = {
       topic: cleanTopic,
       voiceSpec: customVoice || "Giọng Nam chuyên gia (25-28 tuổi), phát âm chuẩn, trầm ấm, rõ chữ, phong thái tự tin và truyền cảm hứng",
       fullSpeech: fullText,
-      totalDuration: "45 giây (6 cảnh × 7.5 giây)",
+      totalDuration: `${Math.round(scenesData.length * 7.5)} giây (${scenesData.length} cảnh × 7.5 giây)`,
       refImagePrompt: refImagePrompt,
       scenes: scenesData
     };
@@ -49,7 +50,8 @@ const GENERATOR_ENGINE = {
   },
 
   // Generate dynamic expert scripts & unique Veo 3 prompts
-  buildExpertScenes: function(topic) {
+  buildExpertScenes: function(topic, sceneCount = 6) {
+    const count = parseInt(sceneCount) || 6;
     const topicLower = topic.toLowerCase();
 
     // Categorize topic to generate tailored expert hooks & insights
@@ -238,8 +240,21 @@ const GENERATOR_ENGINE = {
           veoPrompt: `VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Final 6th scene finishes speaking with an inviting smile: 'Góc nhìn của bạn thế nào về vấn đề này? Hãy để lại bình luận phía dưới...'. Lock reference image directly as start frame / ingredient. STRICTLY LOCK CHARACTER FACE, OUTFIT AND CLOTHING. ABSOLUTELY NO VIETNAMESE TEXT, NO ON-SCREEN TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK. REJECT CLIP IMMEDIATELY IF CHARACTER OUTFIT OR FACE CHANGES OR ON-SCREEN TEXT APPEARS.`
         }
       ];
+    if (scenes.length > count) {
+      const hook = scenes[0];
+      const cta = scenes[scenes.length - 1];
+      const middle = scenes.slice(1, count - 1);
+      scenes = [hook, ...middle, cta];
+    } else if (scenes.length < count) {
+      while (scenes.length < count) {
+        const lastMid = scenes[scenes.length - 2] || scenes[0];
+        scenes.splice(scenes.length - 1, 0, { ...lastMid });
+      }
     }
 
-    return scenes;
+    return scenes.map((sc, idx) => ({
+      ...sc,
+      sceneNum: idx + 1
+    }));
   }
 };

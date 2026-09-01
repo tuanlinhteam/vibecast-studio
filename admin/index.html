@@ -296,6 +296,18 @@
               <option value="gemini-3.7-flash">Gemini 3.7 Flash (Mới Nhất)</option>
             </select>
           </div>
+
+          <div class="form-group" style="margin-top: 10px;">
+            <label class="form-label" style="font-size: 0.85rem;">🎬 Số Phân Cảnh Kịch Bản (Mặc Định 6 Cảnh)</label>
+            <select id="sceneCountSelect" class="form-select">
+              <option value="3">3 Phân Cảnh (Ngắn gọn 20-25s)</option>
+              <option value="4">4 Phân Cảnh (Tối ưu Reels 28-32s)</option>
+              <option value="5">5 Phân Cảnh (Sâu sắc 35-40s)</option>
+              <option value="6" selected>6 Phân Cảnh (Mặc định - Viral Standard 42-48s)</option>
+              <option value="7">7 Phân Cảnh (Chi tiết 50-55s)</option>
+              <option value="8">8 Phân Cảnh (Chuyên sâu 58-65s)</option>
+            </select>
+          </div>
         </div>
 
         <div class="form-group">
@@ -348,8 +360,8 @@
         </article>
 
         <div class="scenes-header">
-          <h3>🎬 PHÂN CẢNH 6 CLIP VEO 3 (KHÓA NHÂN VẬT & MẶT MẪU)</h3>
-          <button id="btnCopyAllPrompts" class="btn btn-secondary btn-sm">📋 Copy Tất Cả 6 Prompt (Cách 1 Dòng)</button>
+          <h3 id="scenesHeaderTitle">🎬 PHÂN CẢNH KỊCH BẢN VEO 3 (KHÓA NHÂN VẬT & MẶT MẪU)</h3>
+          <button id="btnCopyAllPrompts" class="btn btn-secondary btn-sm">📋 Copy Tất Cả Prompt (Cách 1 Dòng)</button>
         </div>
 
         <div id="scenesList" class="scenes-container"></div>
@@ -406,9 +418,9 @@
   <!-- Firebase Web SDK JS -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-  <script src="../js/auth.js?v=4.4.0"></script>
-  <script src="../js/generator.js?v=4.4.0"></script>
-  <script src="../js/gemini.js?v=4.4.0"></script>
-  <script src="../js/app.js?v=4.4.0"></script>
+  <script src="../js/auth.js?v=4.5.0"></script>
+  <script src="../js/generator.js?v=4.5.0"></script>
+  <script src="../js/gemini.js?v=4.5.0"></script>
+  <script src="../js/app.js?v=4.5.0"></script>
 </body>
 </html>

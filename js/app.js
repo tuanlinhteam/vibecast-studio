@@ -16,6 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Gemini API Key & Model Elements
   const geminiApiKeyInput = document.getElementById('geminiApiKey');
   const geminiModelSelect = document.getElementById('geminiModelSelect');
+  const sceneCountSelect = document.getElementById('sceneCountSelect');
+  const scenesHeaderTitle = document.getElementById('scenesHeaderTitle');
   const apiKeyBadge = document.getElementById('apiKeyBadge');
   const btnToggleKeyVis = document.getElementById('btnToggleKeyVis');
   const btnAiSuggest = document.getElementById('btnAiSuggest');
@@ -785,9 +787,11 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    const sceneCount = sceneCountSelect ? (parseInt(sceneCountSelect.value) || 6) : 6;
+
     btnGenerate.disabled = true;
     btnGenerate.textContent = "⏳ Đang phân tích & tạo kịch bản Viral...";
-    showToast("⏳ Đang phân tích chủ đề & sáng tạo kịch bản Viral...");
+    showToast(`⏳ Đang phân tích chủ đề & sáng tạo kịch bản Viral (${sceneCount} phân cảnh)...`);
 
     const apiKey = geminiApiKeyInput.value.trim();
     const model = geminiModelSelect.value;
@@ -795,28 +799,28 @@ document.addEventListener('DOMContentLoaded', () => {
     let aiScenes = null;
     if (apiKey) {
       try {
-        aiScenes = await GEMINI_SERVICE.generateExpertScript(apiKey, model, topic);
+        aiScenes = await GEMINI_SERVICE.generateExpertScript(apiKey, model, topic, sceneCount);
       } catch (e) {
         console.warn("Gemini AI Script generation failed, falling back to local engine:", e);
       }
     }
 
-    if (aiScenes && Array.isArray(aiScenes) && aiScenes.length === 6) {
+    if (aiScenes && Array.isArray(aiScenes) && aiScenes.length >= 3) {
       const fullText = aiScenes.map(s => s.dialogue).join(" ");
       const refImgPrompt = GENERATOR_ENGINE.buildRefImagePrompt();
       currentOutput = {
         topic: topic,
         voiceSpec: "Giọng Nam chuyên gia (25-28 tuổi), phát âm chuẩn, trầm ấm, rõ chữ, phong thái tự tin và truyền cảm hứng",
         fullSpeech: fullText,
-        totalDuration: "45 giây (6 cảnh × 7.5 giây)",
+        totalDuration: `${Math.round(aiScenes.length * 7.5)} giây (${aiScenes.length} cảnh × 7.5 giây)`,
         refImagePrompt: refImgPrompt,
         scenes: aiScenes
       };
-      showToast("✨ Gemini AI đã sáng tạo kịch bản Content Win độc bản thành công!");
+      showToast(`✨ Gemini AI đã sáng tạo kịch bản Content Win (${aiScenes.length} cảnh) độc bản thành công!`);
     } else {
       // Local fallback engine guaranteed to work 100%
-      currentOutput = GENERATOR_ENGINE.generate(topic);
-      showToast(apiKey ? "⚡ Đã tự động tạo kịch bản Viral 6 cảnh cho chủ đề!" : "✨ Đã sáng tạo kịch bản Viral 6 cảnh thành công!");
+      currentOutput = GENERATOR_ENGINE.generate(topic, sceneCount);
+      showToast(apiKey ? `⚡ Đã tự động tạo kịch bản Viral ${currentOutput.scenes.length} cảnh cho chủ đề!` : `✨ Đã sáng tạo kịch bản Viral ${currentOutput.scenes.length} cảnh thành công!`);
     }
 
     btnGenerate.disabled = false;
@@ -832,6 +836,14 @@ document.addEventListener('DOMContentLoaded', () => {
     speechOutput.textContent = data.fullSpeech;
     if (refPromptOutput && data.refImagePrompt) {
       refPromptOutput.textContent = data.refImagePrompt;
+    }
+
+    if (scenesHeaderTitle) {
+      scenesHeaderTitle.textContent = `🎬 PHÂN CẢNH ${data.scenes.length} CLIP VEO 3 (KHÓA NHÂN VẬT & MẶT MẪU)`;
+    }
+
+    if (btnCopyAllPrompts) {
+      btnCopyAllPrompts.textContent = `📋 Copy Tất Cả ${data.scenes.length} Prompt (Cách 1 Dòng)`;
     }
 
     scenesList.innerHTML = '';
@@ -898,7 +910,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (currentOutput && currentOutput.scenes) {
         const allPromptsText = currentOutput.scenes.map(s => s.veoPrompt).join('\n\n');
         copyToClipboard(allPromptsText);
-        showToast("📋 Đã copy toàn bộ 6 Prompt Veo 3 (mỗi prompt cách 1 dòng)!");
+        showToast(`📋 Đã copy toàn bộ ${currentOutput.scenes.length} Prompt Veo 3 (mỗi prompt cách 1 dòng)!`);
       }
     });
   }
@@ -913,15 +925,16 @@ document.addEventListener('DOMContentLoaded', () => {
   btnExportTxt.addEventListener('click', () => {
     if (!currentOutput) return;
     let content = `=========================================\n`;
-    content += `KỊCH BẢN ONE-SHOT 9:16 (VIBECAST STUDIO)\n`;
+    content += `KỊCH BẢN ONE-SHOT 9:16 (${currentOutput.scenes.length} CẢNH - VIBECAST STUDIO)\n`;
     content += `Chủ đề: ${currentOutput.topic}\n`;
     content += `Giọng đọc: ${currentOutput.voiceSpec}\n`;
+    content += `Thời lượng: ${currentOutput.totalDuration}\n`;
     content += `=========================================\n\n`;
     content += `LỜI THOẠI HOÀN CHỈNH:\n${currentOutput.fullSpeech}\n\n`;
     content += `=========================================\n`;
     content += `PROMPT TẠO ẢNH THAM CHIẾU MẪU (9:16):\n${currentOutput.refImagePrompt || ''}\n\n`;
     content += `=========================================\n`;
-    content += `BẢNG 6 PROMPT VEO 3:\n\n`;
+    content += `BẢNG ${currentOutput.scenes.length} PROMPT VEO 3:\n\n`;
 
     currentOutput.scenes.forEach(s => {
       content += `--- CẢNH ${s.sceneNum}: ${s.goal} ---\n`;
@@ -933,7 +946,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `Kich_Ban_VibeCast_${Date.now()}.txt`;
+    a.download = `Kich_Ban_VibeCast_${currentOutput.scenes.length}Canh_${Date.now()}.txt`;
     a.click();
     showToast("💾 Đã tải file Kịch bản .txt!");
   });

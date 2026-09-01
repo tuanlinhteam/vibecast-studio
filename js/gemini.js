@@ -71,12 +71,13 @@ Yêu cầu trả về JSON Array chứa đúng 5 chuỗi tiêu đề ngắn gọ
     }
   },
 
-  // 2. Generate Full 6-Scene Expert Script via Gemini AI (Content Win Formula)
-  generateExpertScript: async function(apiKey, model = 'gemini-1.5-flash', topic = '') {
+  // 2. Generate Full Expert Script via Gemini AI (Content Win Formula & Dynamic Scene Count)
+  generateExpertScript: async function(apiKey, model = 'gemini-1.5-flash', topic = '', sceneCount = 6) {
     if (!apiKey) {
       throw new Error("Vui lòng nhập Gemini API Key trước khi bấm tạo kịch bản AI!");
     }
 
+    const count = parseInt(sceneCount) || 6;
     const cleanModel = model.trim();
     const allowedModels = ['gemini-1.5-flash', 'gemini-2.0-flash', 'gemini-1.5-pro', 'gemini-3.6-flash', 'gemini-3.7-flash'];
     const activeModel = allowedModels.includes(cleanModel) ? cleanModel : 'gemini-1.5-flash';
@@ -84,26 +85,25 @@ Yêu cầu trả về JSON Array chứa đúng 5 chuỗi tiêu đề ngắn gọ
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey.trim()}`;
 
     const promptText = `Bạn là Đạo diễn kiêm Master Content Creator sáng tạo video One-shot 9:16 triệu view trên TikTok/Reels/Shorts.
-Nhiệm vụ của bạn: Dựa trên chủ đề "${topic}", viết một KỊCH BẢN LỜI THOẠI ĐỘC BẢN, SẮC BÉN, CỰC KỲ KHÁC BIỆT áp dụng ĐÚNG CÔNG THỨC CONTENT WIN (6 CẢNH - TỔNG THỜI LƯỢNG 42-48 GIÂY).
+Nhiệm vụ của bạn: Dựa trên chủ đề "${topic}", viết một KỊCH BẢN LỜI THOẠI ĐỘC BẢN, SẮC BÉN, CỰC KỲ KHÁC BIỆT áp dụng ĐÚNG CÔNG THỨC CONTENT WIN (ĐÚNG NGUYÊN MẪU ${count} PHÂN CẢNH - TỔNG THỜI LƯỢNG KHOẢNG ${Math.round(count * 7.5)} GIÂY).
 
 YÊU CẦU LỜI THOẠI ĐỘC BẢN & PHONG CÁCH CHUYÊN GIA:
 1. TUYỆT ĐỐI KHÔNG DÙNG LỜI THOẠI RẬP KHUÔN HAY MẪU CÓ SẴN. Viết mới 100% lời thoại dành riêng cho chủ đề "${topic}".
 2. Lời thoại là tiếng Việt đời thường sâu sắc, sắc bén, góc nhìn chuyên gia tự tin, truyền cảm hứng và đánh trúng tâm lý số đông.
+3. CHIA ĐÚNG CHÍNH XÁC ${count} CẢNH (CẢNH 1 ĐẾN CẢNH ${count}).
 
-CÔNG THỨC CONTENT WIN BẮT BUỘC (6 CẢNH):
-- Cảnh 1 (Hook Đội Nỗi Đau & Đảo Ngược Suy Nghĩ 1-2s): Đi thẳng vào khẳng định gây bất ngờ hoặc insight nhức nhối nhất của chủ đề "${topic}". Tuyệt đối KHÔNG dùng câu hỏi sáo rỗng kiểu "Bạn có biết...", "Hôm nay...".
-- Cảnh 2 (Bóc Tách Bản Chất Sai Lầm): Phân tích vì sao số đông lại vấp phải góc nhìn sai lệch hoặc điểm mù tâm lý về "${topic}".
-- Cảnh 3 (Chạm Vào Nỗi Đau Ngầm): Nói đúng cảm xúc dồn nén, sự kiệt sức hoặc hậu quả nếu cứ tiếp tục đi theo lối mòn cũ.
-- Cảnh 4 (Giải Pháp Đột Phá - Aha Moment): Đưa ra góc nhìn mới hoàn toàn sắc bén, giải phóng tư duy cho người nghe.
-- Cảnh 5 (Đóng Đinh Giá Trị Cốt Lõi - Quote Triệu View): Một câu chốt kinh điển đắt giá, thể hiện phong thái tự chủ, bản lĩnh độc lập.
-- Cảnh 6 (CTA Bão Bình Luận): Lời kết mở đưa ra góc nhìn/câu hỏi kích thích khán giả phải để lại bình luận tranh luận bên dưới.
+CÔNG THỨC CONTENT WIN BẮT BUỘC (${count} CẢNH):
+- Cảnh 1 (Hook Đội Nỗi Đau & Đảo Ngược Suy Nghĩ 1-2s): Đi thẳng vào khẳng định gây bất ngờ hoặc insight nhức nhối nhất của chủ đề "${topic}". Tuyệt đối KHÔNG dùng câu hỏi sáo rỗng.
+- Cảnh 2 đến Cảnh ${count > 3 ? count - 2 : 2} (Bóc Tách Bản Chất & Giải Pháp): Phân tích vì sao số đông ngộ nhận, thâm nhập điểm mù tâm lý và đưa ra tư duy đột phá.
+- Cảnh ${count > 3 ? count - 1 : count - 1} (Đóng Đinh Giá Trị Cốt Lõi - Quote Triệu View): Một câu chốt kinh điển đắt giá, thể hiện phong thái tự chủ, bản lĩnh độc lập.
+- Cảnh ${count} (CTA Bão Bình Luận): Lời kết mở đưa ra góc nhìn/câu hỏi kích thích khán giả phải để lại bình luận tranh luận bên dưới.
 
 QUY TẮC BẮT BUỘC PROMPT VEO 3:
 - KHÓA TUYỆT ĐỐI CHỮ TIẾNG VIỆT, TRANG PHỤC, NHÂN VẬT VÀ HÌNH ẢNH MẪU CỦA VIDEO GỐC: Không sai chữ, không đổi quần áo, dùng ảnh tham chiếu trực tiếp làm Start Frame / Ingredient.
 - Đầu veoPrompt bắt đầu: "VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Static tripod close-up medium shot looking directly into camera lens. Lock reference image directly as start frame / ingredient. STRICTLY LOCK CHARACTER FACE, OUTFIT, CLOTHING AND BACKGROUND CONTINUITY..."
 - Cuối veoPrompt kết thúc: "ABSOLUTELY NO VIETNAMESE TEXT, NO ON-SCREEN TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK. REJECT CLIP IMMEDIATELY IF CHARACTER OUTFIT OR FACE CHANGES OR ON-SCREEN TEXT APPEARS."
 
-Trả về duy nhất cấu trúc JSON chuẩn:
+Trả về duy nhất cấu trúc JSON chuẩn có đúng ${count} phần tử trong mảng "scenes":
 {
   "scenes": [
     {
@@ -115,7 +115,7 @@ Trả về duy nhất cấu trúc JSON chuẩn:
       "endPose": "Tư thế kết thúc cảnh 1...",
       "veoPrompt": "VIDEO SẠCH, TUYỆT ĐỐI KHÔNG CHỮ. Vertical 9:16 video. Static tripod close-up medium shot looking directly into camera lens. Lock reference image directly as start frame / ingredient. STRICTLY LOCK CHARACTER FACE, OUTFIT, CLOTHING AND BACKGROUND CONTINUITY. Looks directly into camera lens and speaks with natural lip-sync in Vietnamese: '[Nội dung câu thoại cảnh 1...]'. ABSOLUTELY NO VIETNAMESE TEXT, NO ON-SCREEN TEXT, NO SUBTITLES, NO CAPTIONS, NO LOGO, NO WATERMARK. REJECT CLIP IMMEDIATELY IF CHARACTER OUTFIT OR FACE CHANGES OR ON-SCREEN TEXT APPEARS."
     },
-    ... (đủ 6 cảnh)
+    ... (tạo đúng ${count} cảnh từ Cảnh 1 tới Cảnh ${count})
   ]
 }`;
 
@@ -126,7 +126,7 @@ Trả về duy nhất cấu trúc JSON chuẩn:
       generationConfig: {
         responseMimeType: "application/json",
         temperature: 0.85,
-        maxOutputTokens: 3000
+        maxOutputTokens: 3500
       }
     };
 
@@ -151,10 +151,14 @@ Trả về duy nhất cấu trúc JSON chuẩn:
     const cleanJson = rawText.replace(/```json/gi, '').replace(/```/gi, '').trim();
     const parsedObj = JSON.parse(cleanJson);
 
-    if (parsedObj && Array.isArray(parsedObj.scenes) && parsedObj.scenes.length === 6) {
-      return parsedObj.scenes;
+    if (parsedObj && Array.isArray(parsedObj.scenes) && parsedObj.scenes.length >= 3) {
+      // Re-index scene numbers to ensure consistency
+      return parsedObj.scenes.map((sc, idx) => ({
+        ...sc,
+        sceneNum: idx + 1
+      }));
     }
-    throw new Error("Dữ liệu Gemini trả về không đúng cấu trúc 6 cảnh.");
+    throw new Error(`Dữ liệu Gemini trả về không đúng cấu trúc ${count} cảnh.`);
   },
 
   // Bulletproof JSON and Line Parser
